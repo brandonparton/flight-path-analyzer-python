@@ -13,7 +13,7 @@ The charts display the aircraft’s altitude, airspeed, pitch, roll, throttle, a
 
 ## Installation
 
-To install the necessary dependencies, run:git
+To install the necessary dependencies, run:
 
 ```bash
 pip install -r requirements.txt
