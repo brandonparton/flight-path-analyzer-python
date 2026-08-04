@@ -21,27 +21,25 @@ Flight Path Analyzer is a Python-based telemetry visualization application that 
 - Modular Python package structure
 - JSON telemetry loading
 - Input data validation
-- Command-line interface
 - Automated tests with pytest
-- Editable package installation
+- Package installation
 
 ## Version History
 
 ### v2.0.0
-Rebuilt the whole thing as a proper installable package instead of one big script. Split the logic into separate modules (loader, validator, charts, flight path) and added a real CLI so you can point it at any telemetry file instead of editing the filename in code.
+Rebuilt the whole thing as a proper installable package instead of one big script. Split the logic into separate modules: loader, validator, charts, flight path.
 
 Also added:
 - Validation that checks for required columns before anything tries to chart
-- Actual error handling for missing files and bad JSON (v1 just crashed)
+- Error handling for missing files and bad JSON (v1 just crashed)
 - Takeoff/landing markers on the 3D flight path
 - A pytest suite
 - Logging instead of print statements
-- pyproject.toml packaging, so it installs with pip
+- pyproject.toml packaging
 
-Also cleaned up the chart code — it was six nearly-identical blocks for each telemetry line, now it's driven off a small config list.
 
 ### v1.0.0
-First version. One script, hardcoded to load `flight_data.json`, no tests, no validation. Generated the 3D flight path and the telemetry charts but the 3D path was just the trajectory line, no start/end markers.
+One script, hardcoded to load `flight_data.json`, no tests, no validation. Generated the 3D flight path and the telemetry charts but the 3D path was just the trajectory line, no start/end markers.
 
 ## Installation
 
@@ -133,8 +131,3 @@ Telemetry Dashboard
 - Plotly
 - Pytest
 - JSON Data Processing
-
-## Roadmap
-
-- Add a flight summary report (duration, max altitude, max speed, fuel used)
-- Add screenshots/GIFs of the actual v2 output
