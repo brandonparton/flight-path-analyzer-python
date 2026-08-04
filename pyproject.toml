@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+
+[project]
+name = "flight-path-analyzer"
+version = "2.0.0"
+description = "Interactive flight telemetry analyzer using Python and Plotly"
+authors = [
+    {name = "Brandon Parton"}
+]
+requires-python = ">=3.11"
+
+dependencies = [
+    "pandas",
+    "plotly",
+]
+
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+]
+
+
+[project.scripts]
+flight-analyzer = "flight_analyzer.main:main"
+
+
+[tool.setuptools.packages.find]
+where = ["src"]
