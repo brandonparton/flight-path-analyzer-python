@@ -46,7 +46,7 @@ One script, hardcoded to load `flight_data.json`, no tests, no validation. Gener
 Clone the repository:
 
 ```bash
-git clone https://github.com/yourusername/flight-path-analyzer-python.git
+git clone https://github.com/brandonparton/flight-path-analyzer-python.git
 cd flight-path-analyzer-python
 ```
 
