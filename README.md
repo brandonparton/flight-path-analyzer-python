@@ -64,7 +64,7 @@ pip install -e ".[dev]"
 
 ## Usage
 
-Place your telemetry JSON file in the `data/` directory, then run the flight analyzer:
+Run the application:
 
 ```bash
 flight-analyzer flight_data.json
