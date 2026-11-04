@@ -30,6 +30,7 @@ def forbid_figures(monkeypatch):
         ({"fuel": None}, "fuel"),
         ({"airspeed": True}, "airspeed"),
         ({"altitude": float("inf")}, "altitude"),
+        ({"altitude": 10**400}, "altitude"),
     ],
 )
 def test_invalid_telemetry_fails_before_plotting(

@@ -77,6 +77,12 @@ def test_non_real_values_are_rejected(telemetry_record, value):
         validate_dataframe(pd.DataFrame([record]))
 
 
+def test_unrepresentable_number_reports_record_and_field(telemetry_record):
+    df = pd.DataFrame([{**telemetry_record, "altitude": 10**400}], dtype=object)
+    with pytest.raises(ValueError, match="record 1 field 'altitude'.*finite number"):
+        validate_dataframe(df)
+
+
 def test_missing_value_in_one_record_reports_its_position(telemetry_record):
     second = {**telemetry_record, "time": 1}
     del second["fuel"]

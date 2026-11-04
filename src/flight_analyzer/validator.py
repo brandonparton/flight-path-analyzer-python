@@ -40,9 +40,15 @@ def validate_dataframe(df: DataFrame) -> None:
 
     for column in sorted(REQUIRED_COLUMNS):
         for row, value in enumerate(df[column], start=1):
-            if isinstance(value, bool) or not isinstance(value, Real) or not isfinite(value):
+            is_number = isinstance(value, Real) and not isinstance(value, bool)
+            try:
+                valid = is_number and isfinite(value)
+            except OverflowError:
+                valid = False
+            if not valid:
                 raise ValueError(
-                    f"Telemetry record {row} field '{column}' must be a finite number"
+                    f"Telemetry record {row} field '{column}' must be a finite number "
+                    "within the supported numeric range"
                 )
 
     for column, lower, upper in [("latitude", -90, 90), ("longitude", -180, 180)]:
