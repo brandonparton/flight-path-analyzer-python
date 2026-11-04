@@ -118,3 +118,23 @@ def test_coordinates_outside_bounds_are_rejected(telemetry_record, field, value,
 def test_coordinate_boundaries_are_inclusive(telemetry_record, latitude, longitude):
     record = {**telemetry_record, "latitude": latitude, "longitude": longitude}
     validate_dataframe(pd.DataFrame([record]))
+
+
+@pytest.mark.parametrize(
+    ("times", "row"),
+    [([0, 0], 2), ([1, 0], 2), ([0, 2, 1], 3), ([0, 1, 1], 3)],
+)
+def test_times_must_strictly_increase_in_input_order(telemetry_record, times, row):
+    df = pd.DataFrame([{**telemetry_record, "time": time} for time in times])
+    with pytest.raises(ValueError, match=rf"record {row} field 'time'.*greater than"):
+        validate_dataframe(df)
+
+
+@pytest.mark.parametrize("times", [[42], [-5, -1, 0], [0.25, 1, 60.5]])
+def test_single_and_irregular_increasing_times_are_valid(telemetry_record, times):
+    df = pd.DataFrame([{**telemetry_record, "time": time} for time in times])
+    original = df.copy(deep=True)
+
+    validate_dataframe(df)
+
+    pd.testing.assert_frame_equal(df, original)

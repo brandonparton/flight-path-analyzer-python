@@ -1,3 +1,4 @@
+from itertools import pairwise
 from math import isfinite
 from numbers import Real
 
@@ -18,7 +19,10 @@ REQUIRED_COLUMNS = {
 
 def validate_dataframe(df: DataFrame) -> None:
     """
-    Validate non-empty telemetry, finite numbers, and geographic coordinates.
+    Validate non-empty telemetry, finite numbers, coordinates, and time order.
+
+    Record numbers are one-based positions, independent of the DataFrame index.
+    Input is checked without sorting, coercing values, or dropping extra columns.
 
     Raises:
         ValueError: If records, required columns, or numeric values are invalid.
@@ -48,3 +52,10 @@ def validate_dataframe(df: DataFrame) -> None:
                     f"Telemetry record {row} field '{column}' must be between "
                     f"{lower} and {upper} degrees"
                 )
+
+    for row, (previous, current) in enumerate(pairwise(df["time"]), start=2):
+        if current <= previous:
+            raise ValueError(
+                f"Telemetry record {row} field 'time' must be greater than "
+                f"record {row - 1} (duplicate or out-of-order timestamp)"
+            )
