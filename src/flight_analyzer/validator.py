@@ -18,8 +18,11 @@ def validate_dataframe(df: DataFrame) -> None:
     Validate that the telemetry DataFrame contains all required columns.
 
     Raises:
-        ValueError: If any required columns are missing.
+        ValueError: If there are no records or required columns are missing.
     """
+    if len(df) == 0:
+        raise ValueError("Telemetry data must contain at least one telemetry record")
+
     missing = REQUIRED_COLUMNS - set(df.columns)
 
     if missing:

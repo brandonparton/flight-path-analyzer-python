@@ -9,7 +9,7 @@ DATA_DIR = PROJECT_ROOT / "data"
 
 def load_data(filename: str, data_dir: Path = DATA_DIR) -> list[dict[str, Any]]:
     """
-    Load flight telemetry data from a JSON file.
+    Load a non-empty JSON array of telemetry objects.
 
     Args:
         filename: Name of the JSON file located in the data directory.
@@ -21,7 +21,7 @@ def load_data(filename: str, data_dir: Path = DATA_DIR) -> list[dict[str, Any]]:
 
     Raises:
         FileNotFoundError: If the file cannot be found.
-        ValueError: If the JSON is invalid.
+        ValueError: If the JSON is invalid, empty, or not an array of objects.
     """
     file_path = data_dir / filename
 
@@ -30,6 +30,18 @@ def load_data(filename: str, data_dir: Path = DATA_DIR) -> list[dict[str, Any]]:
 
     try:
         with file_path.open("r", encoding="utf-8") as file:
-            return json.load(file)
+            data = json.load(file)
     except json.JSONDecodeError as e:
         raise ValueError(f"Invalid JSON in '{filename}': {e}") from e
+
+    if not isinstance(data, list):
+        raise ValueError("Telemetry data must be a JSON array of telemetry records")
+
+    if not data:
+        raise ValueError("Telemetry data must contain at least one telemetry record")
+
+    for row, record in enumerate(data, start=1):
+        if not isinstance(record, dict):
+            raise ValueError(f"Telemetry record {row} must be a JSON object")
+
+    return data
