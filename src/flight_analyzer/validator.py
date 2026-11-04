@@ -18,7 +18,7 @@ REQUIRED_COLUMNS = {
 
 def validate_dataframe(df: DataFrame) -> None:
     """
-    Validate non-empty telemetry and finite numeric values in required fields.
+    Validate non-empty telemetry, finite numbers, and geographic coordinates.
 
     Raises:
         ValueError: If records, required columns, or numeric values are invalid.
@@ -39,4 +39,12 @@ def validate_dataframe(df: DataFrame) -> None:
             if isinstance(value, bool) or not isinstance(value, Real) or not isfinite(value):
                 raise ValueError(
                     f"Telemetry record {row} field '{column}' must be a finite number"
+                )
+
+    for column, lower, upper in [("latitude", -90, 90), ("longitude", -180, 180)]:
+        for row, value in enumerate(df[column], start=1):
+            if not lower <= value <= upper:
+                raise ValueError(
+                    f"Telemetry record {row} field '{column}' must be between "
+                    f"{lower} and {upper} degrees"
                 )

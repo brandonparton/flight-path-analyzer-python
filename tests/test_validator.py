@@ -96,3 +96,25 @@ def test_extra_columns_and_finite_values_are_preserved(telemetry_record):
     validate_dataframe(df)
 
     pd.testing.assert_frame_equal(df, original)
+
+
+@pytest.mark.parametrize(
+    ("field", "value", "bounds"),
+    [
+        ("latitude", -90.01, "-90 and 90"),
+        ("latitude", 90.01, "-90 and 90"),
+        ("longitude", -180.01, "-180 and 180"),
+        ("longitude", 180.01, "-180 and 180"),
+    ],
+)
+def test_coordinates_outside_bounds_are_rejected(telemetry_record, field, value, bounds):
+    second = {**telemetry_record, "time": 1, field: value}
+    with pytest.raises(ValueError, match=rf"record 2 field '{field}'.*{bounds}"):
+        validate_dataframe(pd.DataFrame([telemetry_record, second]))
+
+
+@pytest.mark.parametrize("latitude", [-90, 0, 90])
+@pytest.mark.parametrize("longitude", [-180, 0, 180])
+def test_coordinate_boundaries_are_inclusive(telemetry_record, latitude, longitude):
+    record = {**telemetry_record, "latitude": latitude, "longitude": longitude}
+    validate_dataframe(pd.DataFrame([record]))
